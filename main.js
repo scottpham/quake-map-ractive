@@ -246,7 +246,7 @@ var ractive = new Ractive({
             return date.toLocaleTimeString() + ", " + date.toLocaleDateString();
         },
         // default sort column to magnitude
-        sortColumn: 'place'
+        sortColumn: 'time'
     },
     // these properties depend on other properties
     computed: {
@@ -257,6 +257,7 @@ var ractive = new Ractive({
             var today = new Date();
             // convert to stime, then subtract one day: http://stackoverflow.com/questions/16401804/how-to-get-the-day-before-a-date-in-javascript
             var yesterday = new Date(today.getTime());
+
             yesterday.setTime(today.getTime() - 86400000);
             // convert to ISO
             var yesterdayISO = yesterday.toISOString();

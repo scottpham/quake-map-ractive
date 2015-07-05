@@ -7,10 +7,11 @@
     <title>Ractive Quake</title>
     <!--jquery -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <!--Leaflet css-->
     <link rel="stylesheet" href="css/leaflet.css" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    
     <!-- mapbox js cdn-->
     <script src='//api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.js'></script>
     <style>
@@ -29,6 +30,8 @@
         background-color: darkgrey;
         color: white;
         text-align: center;
+        font-weight: bold;
+        font-size: 18px
     }
     
     .sorted {
@@ -40,12 +43,35 @@
         height: 500px;
     }
 
-    tr:hover {
-      background-color: lightyellow;
+    tr:hover, tr:hover td {
+      background-color: lightslategray; 
+      opacity: 0.9;
+      color: white;
     }
 
-    .highlight {
-      background-color: lightyellow;
+    .highlight, .highlight td {
+      background-color: lightslategray;
+      opacity: 0.9;
+      color: white;
+    }
+
+    td {
+      text-align: center;
+      padding: 3px 3px;
+      font-size: 16px;
+      color: black;
+      opacity: .7;
+      font-weight: bolder;
+      border: 1px solid lightgray;
+    }
+
+    .table-col {
+      height: 500px !important;
+      overflow-y:scroll;
+    }
+
+    .hideMe {
+      opacity: 0 !important;
     }
     </style>
 </head>
@@ -66,26 +92,27 @@
     <script id='template' type='text/ractive'>
         <h2>Quakes Since Yesterday: {{totalQuakes}}</h2>
         <!--Table-->
-        <div class="col-xs-6">
-            <table class="list table table-bordered">
-                <th decorator='sortable:mag'>Magnitude {{#if sortColumn === 'mag'}}{{>down}} {{else}}&emsp;&ensp; {{/if}}
+        <div class="col-sm-4 col-xs-6 table-col">
+            <table class="table table-bordered table-condensed">
+                <th decorator='sortable:mag'>Magnitude {{#if sortColumn === 'mag'}}{{>down}} {{else}} {{>hiddenDown}}{{/if}}
                 </th>
-                <th decorator='sortable:place'>Location {{#if sortColumn === 'place'}} {{>down}} {{else}}&emsp;&ensp; {{/if}}
-                </th>
-                <th decorator='sortable:time'>Time {{#if sortColumn === 'time'}} {{>down}} {{else}}&emsp;&ensp; {{/if}}
+                <!--
+                <th decorator='sortable:place'>Location {{#if sortColumn === 'place'}} {{>down}} {{else}} {{>hiddenDown}} {/if}}
+                </th>-->
+                <th decorator='sortable:time'>Time {{#if sortColumn === 'time'}} {{>down}} {{else}} {{>hiddenDown}}{{/if}}
                 </th>
                 {{#each mySort(events, sortColumn)}}
                 <tr class={{id}} on-click='select'>
                     {{#with properties}}
                     <td>{{mag}}</td>
-                    <td>{{spliceLocation(place)}}</td>
+                    <!--<td>{{spliceLocation(place)}}</td>-->
                     <td>{{formatDate(time)}}</td>
                     {{/with}}
                 </tr>
                 {{/each}}
             </table>
         </div>
-            <div class="col-xs-6">
+            <div class="col-sm-8 col-xs-6">
                 <div id="map" decorator='mapDecorator'>
                 </div>
             </div>
@@ -93,7 +120,11 @@
             <!--PARTIALS-->
 
             {{#partial down}}
-            <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span> {{/partial}} {{#partial leaflet}} {{/leaflet}}
+            <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span> {{/partial}} 
+
+            {{#partial hiddenDown}}
+            <span class="glyphicon glyphicon-triangle-bottom hideMe " aria-hidden="true"></span> 
+            {{/partial}} 
     </script>
     <script src='http://cdn.ractivejs.org/edge/ractive.min.js'></script>
     <!--
@@ -102,7 +133,7 @@
   -->
     <script src="main.js"></script>
     <!-- LIVE RELOAD -->
-    <script src="//localhost:35729/livereload.js"></script>
+
 </body>
 
 </html>
