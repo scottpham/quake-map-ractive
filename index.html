@@ -56,7 +56,7 @@
     
     <!--Table-->
 
-    <div class="col-xs-8">
+    <div class="col-xs-6">
         <table class="list table table-bordered">
             <th decorator='sortable:mag'>Magnitude
             {{#if sortColumn === 'mag'}}{{>down}}
@@ -85,6 +85,10 @@
             </tr>
             {{/each}}
         </table>
+
+        <div class="col-xs-6">
+          <div id="map" decorator='mapDecorator'>
+        </div>
     </div>
 
   

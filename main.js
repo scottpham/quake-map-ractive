@@ -43,6 +43,21 @@ var sortableDecorator = function(node, columnName) {
     }
 };
 
+//map decorator
+
+var mapDecorator = function(node, argument){
+
+    var map;
+
+    return {
+        teardown: function(){
+            //teardown stuff
+        }
+    }
+}
+
+
+//MAIN RACTIVE INSTANCE
 var ractive = new Ractive({
     // The `el` option can be a node, an ID, or a CSS selector.
     el: '#container',
@@ -50,7 +65,8 @@ var ractive = new Ractive({
     // we're passing the ID of the <script> tag above.
     template: '#template',
     decorators: {
-        sortable: sortableDecorator
+        sortable: sortableDecorator,
+        mapDecorator: mapDecorator
     },
     // Here, we're passing in some initial data
     data: {
