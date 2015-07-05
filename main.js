@@ -141,6 +141,14 @@ var mapDecorator = function(node, argument) {
             color: "yellow", //stroke color, not fill
             weight: "3"
         }); //highlight color
+
+
+        //highlight table
+        console.log(e.target.feature.id);
+        var id = "." + e.target.feature.id;
+        $('tr').removeClass('highlight');
+        $(id).toggleClass('highlight');
+
     }
 
     // fires when second circle hovers
@@ -150,8 +158,8 @@ var mapDecorator = function(node, argument) {
             color: "white", //stroke color
             weight: 1
         });
-
     }
+
 
     L.tileLayer('http://api.tiles.mapbox.com/v4/nbclocal.l391gdl1/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibmJjbG9jYWwiLCJhIjoiS3RIUzNQOCJ9.le_LAljPneLpb7tBcYbQXQ', {
         attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
