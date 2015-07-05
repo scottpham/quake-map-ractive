@@ -40,7 +40,7 @@ var sortableDecorator = function(node, columnName) {
                 }
             }
         }
-    }
+    };
 };
 
 //map decorator
@@ -178,7 +178,7 @@ var mapDecorator = function(node, argument) {
 
         //actually add the thing
         mapLayer.addTo(map);
-    };
+    }
 
     // var url = this.get('url');
     // console.log(url);
@@ -196,8 +196,8 @@ var mapDecorator = function(node, argument) {
         teardown: function() {
             //teardown stuff
         }
-    }
-}
+    };
+};//end map decorator
 
 
 //MAIN RACTIVE INSTANCE
@@ -226,7 +226,7 @@ var ractive = new Ractive({
         asyncStatus: false,
         // helper function to format location
         spliceLocation: function(loc) {
-            var string = loc.split(', California')
+            var string = loc.split(', California');
                 //console.log(string[0]);
             return string[0];
         },
