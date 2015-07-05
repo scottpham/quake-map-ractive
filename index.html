@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang='en-GB'>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<head>
+    <meta charset='utf-8'>
+    <title>Ractive Quake</title>
+    <!--jquery -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <!--Leaflet css-->
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <!-- mapbox js cdn-->
+    <script src='//api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.js'></script>
+    <style>
+    ul {
+        padding: 0;
+        line-height: 0;
+    }
+    
+    li {
+        display: inline-block;
+        list-style-type: none;
+        list-style-position: inside;
+    }
+
+    th {
+      background-color: darkgrey;
+      color: white;
+      text-align: center;
+    }
+
+    .sorted{
+      color: yellow;
+    }
+    </style>
+</head>
+
+<body>
+    <!--
+       1. This is the element we'll render our Ractive to.
+  -->
+    <!-- bind ractive instance to el: #container -->
+    <div id='container' class="container-fluid"></div>
+    <!--
+       2. You can load a template in many ways. For convenience, we'll include it in
+       a script tag so that we don't need to mess around with AJAX or multiline strings.
+       Note that we've set the type attribute to 'text/ractive' - though it can be
+       just about anything except 'text/javascript'
+  -->
+    <!-- LIST TEMPLATE -->
+    <script id='template' type='text/ractive'>
+    
+    <h2>Quakes Since Yesterday: {{totalQuakes}}</h2>
+    
+    <!--Table-->
+
+    <div class="col-xs-8">
+        <table class="list table table-bordered">
+            <th decorator='sortable:mag'>Magnitude
+            {{#if sortColumn === 'mag'}}{{>down}}
+              {{else}}&emsp;&ensp;
+            {{/if}}
+            </th>
+
+            <th decorator='sortable:place'>Location
+            {{#if sortColumn === 'place'}}
+              {{>down}}
+              {{else}}&emsp;&ensp;
+            {{/if}}
+            </th>
+            <th decorator='sortable:time'>Time
+            {{#if sortColumn === 'time'}}
+              {{>down}}
+              {{else}}&emsp;&ensp;
+            {{/if}}</th>
+            {{#each mySort(events, sortColumn)}}
+            <tr>
+              {{#with properties}}
+                <td>{{mag}}</td>
+                <td>{{spliceLocation(place)}}</td>
+                <td>{{formatDate(time)}}</td>
+              {{/with}}
+            </tr>
+            {{/each}}
+        </table>
+    </div>
+
+  
+    <!--PARTIALS-->
+    {{#partial down}}
+     <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+    {{/partial}}
+
+    {{#partial leaflet}}
+
+    {{/leaflet}}
+
+
+    </script>
+
+    <script src='http://cdn.ractivejs.org/edge/ractive.min.js'></script>
+    <!--
+       4. We've got an element in the DOM, we've created a template, and we've
+       loaded the library - now it's time to build our Hello World app.
+  -->
+    <script src="main.js"></script>
+    <!-- LIVE RELOAD -->
+    <script src="//localhost:35729/livereload.js"></script>
+</body>
+
+</html>
