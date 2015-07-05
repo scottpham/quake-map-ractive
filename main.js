@@ -104,8 +104,22 @@ var mapDecorator = function(node, argument) {
     function onEachPoint(feature, layer) {
         layer.on({
             mouseover: circleHover,
-            click: circleHover
+            // click: circleHover
         });
+
+        var formatLoc = ractive.get('spliceLocation'),
+            formatDat = ractive.get('formatDate');
+
+        var place = feature.properties.place,
+            time = feature.properties.time,
+            link = feature.properties.url,
+            mag = feature.properties.mag,
+            popupContent = "<strong>Magnitude: </strong>" + mag +
+            "<br/><strong>Place: </strong>" + formatLoc(place) +
+            "<br/><strong>Time: </strong>" + formatDat(time) +
+            '<br/><strong><a target="_blank" href=' + link + ">View on USGS</a>";
+
+        layer.bindPopup(popupContent);
     }
 
     //hover function(s)
