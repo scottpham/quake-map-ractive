@@ -67,7 +67,7 @@
                 <th decorator='sortable:time'>Time {{#if sortColumn === 'time'}} {{>down}} {{else}}&emsp;&ensp; {{/if}}
                 </th>
                 {{#each mySort(events, sortColumn)}}
-                <tr>
+                <tr class={{id}} on-click='select'>
                     {{#with properties}}
                     <td>{{mag}}</td>
                     <td>{{spliceLocation(place)}}</td>
@@ -81,7 +81,9 @@
                 <div id="map" decorator='mapDecorator'>
                 </div>
             </div>
+
             <!--PARTIALS-->
+
             {{#partial down}}
             <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span> {{/partial}} {{#partial leaflet}} {{/leaflet}}
     </script>

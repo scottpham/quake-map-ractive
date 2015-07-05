@@ -54,10 +54,13 @@ var mapDecorator = function(node, argument) {
     var sizeConstant = 5;
 
     //set up map object
+
     var map = L.map('map', {
         //options
         scrollWheelZoom: false
     });
+
+    this.map = map;
 
     map.setView([37.78, -122], 7);
 
@@ -79,13 +82,14 @@ var mapDecorator = function(node, argument) {
 
     // size function
     function getSize(d) {
-        return d * sizeConstant;
+        return d * sizeConstant + 2;
     }
 
     //layer style
     function pointLayerStyle(feature) {
 
         var diameter = feature.properties.mag;
+
         return {
             radius: getSize(diameter),
             fillColor: 'maroon',
@@ -99,8 +103,8 @@ var mapDecorator = function(node, argument) {
     //events
     function onEachPoint(feature, layer) {
         layer.on({
-            mouseover: hover,
-            click: hover
+            mouseover: circleHover,
+            click: circleHover
         });
     }
 
@@ -108,7 +112,9 @@ var mapDecorator = function(node, argument) {
     // declare for scope
     var lastTarget;
     //fires on hover
-    function hover(e) {
+
+    function circleHover(e) {
+        console.log(e);
         // check to make sure lastTarget has been asigned
         if (lastTarget) {
             resetStyle(lastTarget);
@@ -121,7 +127,6 @@ var mapDecorator = function(node, argument) {
             color: "yellow", //stroke color, not fill
             weight: "3"
         }); //highlight color
-        info.update(e.target);
     }
 
     // fires when second circle hovers
@@ -139,11 +144,10 @@ var mapDecorator = function(node, argument) {
     }).addTo(map);
 
     //build map layer
-
     function buildMap(data) {
         var mapLayer = L.geoJson(data, {
             style: pointLayerStyle,
-            oneEachFeature: onEachPoint,
+            onEachFeature: onEachPoint,
             //make a circle of each point
             pointToLayer: function(feature, latlng) {
                 return L.circleMarker(latlng, null);
@@ -157,17 +161,14 @@ var mapDecorator = function(node, argument) {
     // var url = this.get('url');
     // console.log(url);
 
-    this.observe('geojson', function(newValue){
-        console.log(newValue);
-        buildMap(newValue);
-    });
+    this.observe('geojson', function(newValue) {
+        var status = this.get('asyncStatus');
+        console.log(status);
+        if (status) {
+            buildMap(newValue);
+        }
 
-    // $.getJSON(url, function(data) {
-    //     console.log('this is the url' + url);
-    //     console.log('this is the data + ');
-    //     console.log(data);
-    //     buildMap(data);
-    // });
+    });
 
     return {
         teardown: function() {
@@ -197,8 +198,10 @@ var ractive = new Ractive({
         api_lon: -122.42353,
         rangeSize: 213000,
         minMag: 0,
+        lastSelected: null,
         // placeholder for all quake data
         events: {},
+        asyncStatus: false,
         // helper function to format location
         spliceLocation: function(loc) {
             var string = loc.split(', California')
@@ -251,10 +254,55 @@ var ractive = new Ractive({
         //asynchronously get the json data from USGS
         $.getJSON(url, function(data) {
             // bind the success with the 'events' property
+            that.set('asyncStatus', true);
             that.set('events', data.features);
             that.set('geojson', data);
+
         });
     }
+});
+
+//proxy events
+//http://docs.ractivejs.org/latest/proxy-events
+ractive.on('select', function(event) {
+    //get id and coordinates
+    var id = event.context.id,
+        lat = event.context.geometry.coordinates[1],
+        lon = event.context.geometry.coordinates[0];
+
+    //set zoom    
+    this.map.setView([lat, lon], 14);
+
+    //loop through each layer to find matching feature
+    this.map.eachLayer(function(layer) {
+
+        var feature = layer.feature;
+
+        if (feature && feature.id == id) {
+
+            var last = ractive.get('lastSelected');
+            //check to see if something has been selected
+            if (last) {
+                //set to normal
+                console.log(last);
+
+                last.setStyle({
+                    color: "white", //stroke color
+                    weight: 1
+                });
+            }
+            //set the last target to this target
+            ractive.set('lastSelected', layer);
+            console.log()
+
+            console.log("success! " + feature.id);
+            //highlight this target
+            layer.setStyle({
+                color: "yellow", //stroke color, not fill
+                weight: "3"
+            });
+        }
+    });
 });
 
 
