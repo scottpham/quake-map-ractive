@@ -45,12 +45,132 @@ var sortableDecorator = function(node, columnName) {
 
 //map decorator
 
-var mapDecorator = function(node, argument){
+var mapDecorator = function(node, argument) {
 
-    var map;
+    // Set the range size (in Km?)
+    var rangeSize = 213000;
+
+    //size multiplier for quake circles
+    var sizeConstant = 5;
+
+    //set up map object
+    var map = L.map('map', {
+        //options
+        scrollWheelZoom: false
+    });
+
+    map.setView([37.78, -122], 7);
+
+    //make a point
+    var rangelatlng = L.latLng(37.77177, -122.42353);
+
+    //build circle to indicate api range
+    var range = L.circle(rangelatlng, null, {
+        stroke: false,
+        color: "steelblue",
+        fillOpacity: 0.3
+    });
+
+    //set range circle size
+    range.setRadius(rangeSize);
+
+    //add the range circle
+    range.addTo(map);
+
+    // size function
+    function getSize(d) {
+        return d * sizeConstant;
+    }
+
+    //layer style
+    function pointLayerStyle(feature) {
+
+        var diameter = feature.properties.mag;
+        return {
+            radius: getSize(diameter),
+            fillColor: 'maroon',
+            color: "white",
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8
+        };
+    }
+
+    //events
+    function onEachPoint(feature, layer) {
+        layer.on({
+            mouseover: hover,
+            click: hover
+        });
+    }
+
+    //hover function(s)
+    // declare for scope
+    var lastTarget;
+    //fires on hover
+    function hover(e) {
+        // check to make sure lastTarget has been asigned
+        if (lastTarget) {
+            resetStyle(lastTarget);
+        }
+        // resetStyle(lastTarget);
+        var layer = e.target;
+        lastTarget = e;
+        // console.log(e.target.feature);
+        layer.setStyle({
+            color: "yellow", //stroke color, not fill
+            weight: "3"
+        }); //highlight color
+        info.update(e.target);
+    }
+
+    // fires when second circle hovers
+    function resetStyle(e) {
+        var layer = e.target;
+        layer.setStyle({
+            color: "white", //stroke color
+            weight: 1
+        });
+
+    }
+
+    L.tileLayer('http://api.tiles.mapbox.com/v4/nbclocal.l391gdl1/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibmJjbG9jYWwiLCJhIjoiS3RIUzNQOCJ9.le_LAljPneLpb7tBcYbQXQ', {
+        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
+    }).addTo(map);
+
+    //build map layer
+
+    function buildMap(data) {
+        var mapLayer = L.geoJson(data, {
+            style: pointLayerStyle,
+            oneEachFeature: onEachPoint,
+            //make a circle of each point
+            pointToLayer: function(feature, latlng) {
+                return L.circleMarker(latlng, null);
+            }
+        });
+
+        //actually add the thing
+        mapLayer.addTo(map);
+    };
+
+    // var url = this.get('url');
+    // console.log(url);
+
+    this.observe('geojson', function(newValue){
+        console.log(newValue);
+        buildMap(newValue);
+    });
+
+    // $.getJSON(url, function(data) {
+    //     console.log('this is the url' + url);
+    //     console.log('this is the data + ');
+    //     console.log(data);
+    //     buildMap(data);
+    // });
 
     return {
-        teardown: function(){
+        teardown: function() {
             //teardown stuff
         }
     }
@@ -58,6 +178,8 @@ var mapDecorator = function(node, argument){
 
 
 //MAIN RACTIVE INSTANCE
+
+
 var ractive = new Ractive({
     // The `el` option can be a node, an ID, or a CSS selector.
     el: '#container',
@@ -75,12 +197,12 @@ var ractive = new Ractive({
         api_lon: -122.42353,
         rangeSize: 213000,
         minMag: 0,
-        // placeholder
+        // placeholder for all quake data
         events: {},
         // helper function to format location
         spliceLocation: function(loc) {
             var string = loc.split(', California')
-            //console.log(string[0]);
+                //console.log(string[0]);
             return string[0];
         },
         // sort function takes 2 args: the dataset, and the column u want sorted
@@ -130,6 +252,7 @@ var ractive = new Ractive({
         $.getJSON(url, function(data) {
             // bind the success with the 'events' property
             that.set('events', data.features);
+            that.set('geojson', data);
         });
     }
 });
