@@ -279,23 +279,20 @@ ractive.on('select', function(event) {
         var feature = layer.feature;
 
         if (feature && feature.id == id) {
-
+            //get last selected
             var last = ractive.get('lastSelected');
             //check to see if something has been selected
             if (last) {
-                //set to normal
-                console.log(last);
-
+                //reset the style to normal
                 last.setStyle({
                     color: "white", //stroke color
                     weight: 1
                 });
             }
-            //set the last target to this target
+            //set this quake to become the last selected
             ractive.set('lastSelected', layer);
-            console.log()
 
-            console.log("success! " + feature.id);
+            console.log("the id selected is " + feature.id);
             //highlight this target
             layer.setStyle({
                 color: "yellow", //stroke color, not fill
