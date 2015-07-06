@@ -47,6 +47,9 @@ var sortableDecorator = function(node, columnName) {
 
 var mapDecorator = function(node, argument) {
 
+    //get client width
+    var clientWidth = $(window).width();
+
     // Set the range size (in Km?)
     var rangeSize = 213000;
 
@@ -62,7 +65,13 @@ var mapDecorator = function(node, argument) {
 
     this.map = map;
 
-    map.setView([37.78, -122], 7);
+    if (clientWidth > 410) {
+        map.setView([37.78, -122], 7);
+    }else{
+        map.setView([37.78, -122], 5);
+    }
+
+
 
     //make a point
     var rangelatlng = L.latLng(37.77177, -122.42353);
@@ -321,7 +330,7 @@ ractive.on('select', function(event) {
                 });
             }
             console.log(layer)
-            //set this quake to become the last selected
+                //set this quake to become the last selected
             ractive.set('lastSelected', layer);
 
             console.log("the id selected is " + feature.id);

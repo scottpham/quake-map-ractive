@@ -67,8 +67,8 @@
     }
     
     .table-col {
-        height: 500px !important;
-        overflow-y: scroll;
+        height: 500px;
+        overflow-y: scroll !important;
     }
     
     .hideMe {
@@ -78,6 +78,15 @@
     html {
         overflow: -moz-scrollbars-vertical;
         overflow: scroll;
+    }
+    
+    @media(max-width: 410px) {
+        #map {
+            height: 200px;
+        }
+        .table-col {
+            height: 200px;
+        }
     }
     </style>
 </head>
@@ -98,7 +107,7 @@
     <script id='template' type='text/ractive'>
         <h2>Quakes Since Yesterday: {{totalQuakes}}</h2>
         <!--Table-->
-        <div class="col-sm-4 col-xs-6 table-col">
+        <div class="col-sm-6 table-col">
             <table class="table table-bordered table-condensed">
                 <th decorator='sortable:mag'>Magnitude {{#if sortColumn === 'mag'}}{{>down}} {{else}} {{>hiddenDown}}{{/if}}
                 </th>
@@ -118,7 +127,7 @@
                 {{/each}}
             </table>
         </div>
-        <div class="col-sm-8 col-xs-6">
+        <div class="col-sm-6">
             <div id="map" decorator='mapDecorator'>
             </div>
         </div>
