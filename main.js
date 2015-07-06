@@ -69,9 +69,12 @@ var mapDecorator = function(node, argument) {
 
     //build circle to indicate api range
     var range = L.circle(rangelatlng, null, {
-        stroke: false,
-        color: "steelblue",
-        fillOpacity: 0.3
+        stroke: 1,
+        weight: 2,
+        dashArray: 3,
+        color: "white",
+        fillColor: "steelblue",
+        fillOpacity: 0.2
     });
 
     //set range circle size
@@ -96,7 +99,7 @@ var mapDecorator = function(node, argument) {
             color: "white",
             weight: 1,
             opacity: 1,
-            fillOpacity: 0.8
+            fillOpacity: 0.7
         };
     }
 
@@ -123,20 +126,23 @@ var mapDecorator = function(node, argument) {
     }
 
     //hover function(s)
-    // declare for scope
-    var lastTarget;
+
     //fires on hover
 
     function circleHover(e) {
-        console.log(e);
+
+        //get last selected target
+        var lastTarget = ractive.get('lastSelected');
+
         // check to make sure lastTarget has been asigned
         if (lastTarget) {
             resetStyle(lastTarget);
         }
-        // resetStyle(lastTarget);
+        //get the layer
         var layer = e.target;
-        lastTarget = e;
-        // console.log(e.target.feature);
+
+        ractive.set('lastSelected', layer);
+
         layer.setStyle({
             color: "yellow", //stroke color, not fill
             weight: "3"
@@ -144,7 +150,6 @@ var mapDecorator = function(node, argument) {
 
 
         //highlight table
-        console.log(e.target.feature.id);
         var id = "." + e.target.feature.id;
         $('tr').removeClass('highlight');
         $(id).toggleClass('highlight');
@@ -153,7 +158,7 @@ var mapDecorator = function(node, argument) {
 
     // fires when second circle hovers
     function resetStyle(e) {
-        var layer = e.target;
+        var layer = e;
         layer.setStyle({
             color: "white", //stroke color
             weight: 1
@@ -197,7 +202,7 @@ var mapDecorator = function(node, argument) {
             //teardown stuff
         }
     };
-};//end map decorator
+}; //end map decorator
 
 
 //MAIN RACTIVE INSTANCE
@@ -227,7 +232,7 @@ var ractive = new Ractive({
         // helper function to format location
         spliceLocation: function(loc) {
             var string = loc.split(', California');
-                //console.log(string[0]);
+            //console.log(string[0]);
             return string[0];
         },
         // sort function takes 2 args: the dataset, and the column u want sorted
@@ -293,6 +298,9 @@ ractive.on('select', function(event) {
         lat = event.context.geometry.coordinates[1],
         lon = event.context.geometry.coordinates[0];
 
+    $('tr').removeClass('highlight');
+    $("." + id).toggleClass('highlight');
+
     //set zoom    
     this.map.setView([lat, lon], 14);
 
@@ -312,6 +320,7 @@ ractive.on('select', function(event) {
                     weight: 1
                 });
             }
+            console.log(layer)
             //set this quake to become the last selected
             ractive.set('lastSelected', layer);
 
