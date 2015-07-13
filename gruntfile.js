@@ -29,7 +29,7 @@ module.exports = function(grunt) {
             },
             all: ['main.js']
         },
-        
+
         //watch watches for files and enables live reload
         watch: {
             all: {
@@ -37,6 +37,19 @@ module.exports = function(grunt) {
                 options: {
                     livereload: true
                 }
+            }
+        },
+
+        'ftp-deploy': {
+            build: {
+                auth: {
+                    host: "s189165.gridserver.com",
+                    port: 21,
+                    authKey: "key1"
+                },
+                src: '.',
+                dest: '/scottpham/quake-ractive',
+                exclusions: ['.gitignore', '.ftppass', 'gruntfile.js', 'node_modules', 'readme.md', 'package.json', 'divshot.json', '.divshot-cache', '.git']
             }
         }
     });
@@ -46,13 +59,16 @@ module.exports = function(grunt) {
         'open',
         'express',
         'watch'
-        
     ]);
+
+
+
 
     //enable tasks
     grunt.loadNpmTasks('grunt-open');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-express');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    
+    grunt.loadNpmTasks('grunt-ftp-deploy');
+
 };

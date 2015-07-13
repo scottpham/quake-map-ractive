@@ -66,7 +66,7 @@
         border: 1px solid lightgray;
     }
     
-    .table-col {
+    #table-col {
         height: 500px;
         overflow-y: scroll !important;
     }
@@ -107,8 +107,8 @@
     <script id='template' type='text/ractive'>
         <h2>Quakes Since Yesterday: {{totalQuakes}}</h2>
         <!--Table-->
-        <div class="col-sm-6 table-col">
-            <table class="table table-bordered table-condensed">
+        <div id="table-col" class="col-sm-6 table-col">
+            <table id="table" class="table table-bordered table-condensed">
                 <th decorator='sortable:mag'>Magnitude {{#if sortColumn === 'mag'}}{{>down}} {{else}} {{>hiddenDown}}{{/if}}
                 </th>
                 <!--

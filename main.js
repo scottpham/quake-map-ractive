@@ -137,7 +137,6 @@ var mapDecorator = function(node, argument) {
     //hover function(s)
 
     //fires on hover
-
     function circleHover(e) {
 
         //get last selected target
@@ -162,6 +161,11 @@ var mapDecorator = function(node, argument) {
         var id = "." + e.target.feature.id;
         $('tr').removeClass('highlight');
         $(id).toggleClass('highlight');
+
+        //scroll to table
+        //http://api.jquery.com/scrollTop/
+        var table = $('#table-col');
+        table.animate( {scrollTop: $(id).offset().top} );
 
     }
 
@@ -199,7 +203,7 @@ var mapDecorator = function(node, argument) {
 
     this.observe('geojson', function(newValue) {
         var status = this.get('asyncStatus');
-        console.log(status);
+        console.log("ajax data status is: " + status);
         if (status) {
             buildMap(newValue);
         }
@@ -344,8 +348,3 @@ ractive.on('select', function(event) {
 });
 
 
-
-//TODO: 
-// Decorator for time formatting
-//how to send
-//decorator for making the map
