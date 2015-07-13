@@ -198,8 +198,10 @@ var mapDecorator = function(node, argument) {
         mapLayer.addTo(map);
     }
 
-    // var url = this.get('url');
-    // console.log(url);
+    //add button to zoom out
+    L.easyButton( 'glyphicon-zoom-out', function(){
+        map.setView([37.78, -122], 7);
+    }).addTo(map);
 
     this.observe('geojson', function(newValue) {
         var status = this.get('asyncStatus');
