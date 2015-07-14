@@ -296,8 +296,9 @@ var ractive = new Ractive({
         }
     },
     oninit: function() {
+        //get the computed url for usgs ajax call
         var url = this.get('makeUrl');
-
+        //pass scope
         var that = this;
         //asynchronously get the json data from USGS
         $.getJSON(url, function(data) {
@@ -305,8 +306,8 @@ var ractive = new Ractive({
             that.set('asyncStatus', true);
             that.set('events', data.features);
             that.set('geojson', data);
-
         });
+
     }
 });
 
