@@ -65,9 +65,9 @@ var mapDecorator = function(node, argument) {
 
     this.map = map;
 
-    var zoom = 7; 
+    var zoom = 7;
 
-    if (clientWidth > 410) {
+    if (clientWidth > 650) {
         // desktop
         zoom = 7;
 
@@ -240,7 +240,7 @@ var ractive = new Ractive({
     },
     // Here, we're passing in some initial data
     data: {
-        // 
+        //
         api_lat: 37.77177,
         api_lon: -122.42353,
         rangeSize: 213000,
@@ -322,7 +322,7 @@ ractive.on('select', function(event) {
     $('tr').removeClass('highlight');
     $("." + id).toggleClass('highlight');
 
-    //set zoom    
+    //set zoom
     this.map.setView([lat, lon], 14);
 
     //loop through each layer to find matching feature
@@ -354,5 +354,3 @@ ractive.on('select', function(event) {
         }
     });
 });
-
-
