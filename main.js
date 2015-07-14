@@ -65,13 +65,18 @@ var mapDecorator = function(node, argument) {
 
     this.map = map;
 
+    var zoom = 7; 
+
     if (clientWidth > 410) {
-        map.setView([37.78, -122], 7);
+        // desktop
+        zoom = 7;
+
     }else{
-        map.setView([37.78, -122], 5);
+        //mobile
+        zoom = 5;
     }
 
-
+    map.setView([37.78, -122], zoom);
 
     //make a point
     var rangelatlng = L.latLng(37.77177, -122.42353);
@@ -200,7 +205,7 @@ var mapDecorator = function(node, argument) {
 
     //add button to zoom out
     L.easyButton( 'glyphicon-zoom-out', function(){
-        map.setView([37.78, -122], 7);
+        map.setView([37.78, -122], zoom);
     }).addTo(map);
 
     this.observe('geojson', function(newValue) {
