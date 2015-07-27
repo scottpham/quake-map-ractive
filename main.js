@@ -354,3 +354,16 @@ ractive.on('select', function(event) {
         }
     });
 });
+
+var r = Rlite();
+
+r.add('', function () {
+  document.title = 'Home';
+});
+
+r.add('/page/2', function(){
+    $('h1').html("WHAT IT IS MOTHER FUCKER");
+    console.log("h'what");
+});
+
+
