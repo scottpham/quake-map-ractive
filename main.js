@@ -294,12 +294,15 @@ var ractive = new Ractive({
       return yesterdayISO;
     },
     makeUrl: function() {
-      return
+      var url =
         'http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=' +
         this.get('getYesterday') + '-08:00&latitude=' + this.get(
           'api_lat') + '&longitude=' + this.get('api_lon') +
         '&maxradiuskm=' + this.get('api_maxradiuskm') + '&minmagnitude=' +
         this.get('minMag');
+
+      return url;
+
     },
     totalQuakes: function() {
       return this.get('events').length;
